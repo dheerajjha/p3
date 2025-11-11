@@ -13,7 +13,10 @@ class Settings(BaseSettings):
     backend_api_key: str
 
     # Claude SDK configuration
-    anthropic_api_key: str
+    # NOTE: No API key needed! SDK automatically uses existing Claude Code credentials
+    # from ~/.claude/credentials.json (same as your Claude Code CLI)
+
+    # Point to your existing project directory (where you normally run Claude Code)
     workspace_dir: Path = Path.home() / "claude-workspace"
 
     # Wrapper configuration

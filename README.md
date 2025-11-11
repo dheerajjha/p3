@@ -62,13 +62,27 @@ This monorepo contains a complete system for interacting with Claude AI through 
 - 🛠️ Tool execution handling
 - 📁 Workspace management
 
+## For Existing Claude Code Users 🎉
+
+**You already have Claude Code set up!** This just adds a beautiful mobile interface on top.
+
+### What You Already Have ✅
+
+- Claude Code installed and logged in (`~/.claude/credentials.json`)
+- Your existing projects and workspaces
+- CLAUDE.md configurations and custom commands
+
+### What This Adds
+
+A mobile app that uses your **existing** Claude Code authentication and projects - no duplicate setup needed!
+
 ## Quick Start
 
 ### Prerequisites
 
 - **Mobile**: Flutter 3.0+, Dart 3.0+
 - **Backend**: Node.js 18+, PostgreSQL
-- **Wrapper**: Python 3.10+, Claude Code CLI
+- **Wrapper**: Python 3.10+ (**No separate API key needed!** Uses your existing Claude Code login)
 
 ### 1. Setup Backend
 

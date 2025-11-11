@@ -7,17 +7,24 @@ Agnostic wrapper for Claude Agent SDK that connects to the backend server.
 This wrapper acts as a bridge between your backend server and the Claude Agent SDK. It:
 - Connects to your backend via WebSocket
 - Receives execution commands from the backend
+- **Uses your existing Claude Code authentication** (no separate API key needed!)
 - Wraps Claude Agent SDK and executes queries
+- Works with your existing projects and CLAUDE.md configurations
 - Streams all updates back to the backend in real-time
 - Handles reconnection automatically
+
+## Key Feature: Uses Existing Claude Code Setup
+
+**No need for a separate Anthropic API key!** The wrapper automatically uses the same credentials as your Claude Code CLI from `~/.claude/credentials.json`.
 
 ## Installation
 
 ### Prerequisites
 
 - Python 3.10 or higher
-- Node.js (for Claude Code CLI)
-- Claude Code installed globally: `npm install -g @anthropic-ai/claude-code`
+- **Claude Code already installed**: `npm install -g @anthropic-ai/claude-code`
+- **Already logged in to Claude Code**: Run `claude login` (you probably did this already!)
+  - This creates `~/.claude/credentials.json` which the wrapper will use
 
 ### Setup
 
@@ -49,14 +56,32 @@ BACKEND_URL=ws://localhost:3000/wrapper
 # Backend API key for authentication
 BACKEND_API_KEY=your-backend-api-key
 
-# Your Anthropic API key
-ANTHROPIC_API_KEY=your-anthropic-api-key
+# NO ANTHROPIC_API_KEY NEEDED!
+# Wrapper automatically uses your existing Claude Code credentials
+# from ~/.claude/credentials.json
 
-# Workspace directory for file operations
-WORKSPACE_DIR=/path/to/your/workspace
+# Workspace directory - point to your existing project!
+# This can be the same directory where you normally use Claude Code
+WORKSPACE_DIR=/Users/yourname/your-existing-project
 
 # Unique wrapper identifier
 WRAPPER_ID=wrapper-mac-01
+```
+
+### Verify Your Claude Code Setup
+
+Before running the wrapper, verify your existing Claude Code setup:
+
+```bash
+# Check Claude Code is installed
+claude --version
+
+# Verify you're logged in (should show credentials)
+ls -la ~/.claude/credentials.json
+
+# Test it works
+cd /path/to/your/project
+echo "List files" | claude -p
 ```
 
 ## Usage

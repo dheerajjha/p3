@@ -21,8 +21,10 @@ class ClaudeService:
         self.workspace_dir = Path(settings.workspace_dir)
         self.workspace_dir.mkdir(parents=True, exist_ok=True)
 
+        # NOTE: No api_key parameter needed!
+        # ClaudeAgentOptions automatically uses existing Claude Code credentials
+        # from ~/.claude/credentials.json (same authentication as your CLI)
         self.options = ClaudeAgentOptions(
-            api_key=settings.anthropic_api_key,
             working_directory=str(self.workspace_dir),
             allowed_tools=[
                 "read",
