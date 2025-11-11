@@ -1,7 +1,11 @@
+# Claude Agent SDK - uses existing Claude Code authentication
 claude-sdk>=0.1.6
-fastapi>=0.108.0
+
+# WebSocket and async support
 websockets>=12.0
-pydantic>=2.5.0
-python-dotenv>=1.0.0
 aiohttp>=3.9.0
-uvicorn>=0.25.0
+
+# Configuration and validation
+pydantic>=2.5.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
