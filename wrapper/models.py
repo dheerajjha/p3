@@ -1,7 +1,12 @@
 """Data models for wrapper communication."""
 from typing import Any, Dict, List, Literal, Optional
-from pydantic import BaseModel, Field
-from datetime import datetime
+from pydantic import BaseModel, Field, ConfigDict
+from datetime import datetime, timezone
+
+
+def utc_now() -> datetime:
+    """Get current UTC time as timezone-aware datetime."""
+    return datetime.now(timezone.utc)
 
 
 class ExecuteCommand(BaseModel):
@@ -17,7 +22,13 @@ class MessageUpdate(BaseModel):
     type: Literal["message"] = "message"
     session_id: str
     data: Dict[str, Any]
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=utc_now)
+
+    model_config = ConfigDict(
+        json_encoders={
+            datetime: lambda v: v.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        }
+    )
 
 
 class ToolExecutionUpdate(BaseModel):
@@ -25,7 +36,13 @@ class ToolExecutionUpdate(BaseModel):
     type: Literal["tool_execution"] = "tool_execution"
     session_id: str
     data: Dict[str, Any]
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=utc_now)
+
+    model_config = ConfigDict(
+        json_encoders={
+            datetime: lambda v: v.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        }
+    )
 
 
 class ErrorUpdate(BaseModel):
@@ -34,7 +51,13 @@ class ErrorUpdate(BaseModel):
     session_id: str
     error: str
     details: Optional[Dict[str, Any]] = None
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=utc_now)
+
+    model_config = ConfigDict(
+        json_encoders={
+            datetime: lambda v: v.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        }
+    )
 
 
 class StatusUpdate(BaseModel):
@@ -42,11 +65,23 @@ class StatusUpdate(BaseModel):
     type: Literal["status"] = "status"
     wrapper_id: str
     status: Literal["connected", "disconnected", "ready", "busy"]
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=utc_now)
+
+    model_config = ConfigDict(
+        json_encoders={
+            datetime: lambda v: v.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        }
+    )
 
 
 class CompleteUpdate(BaseModel):
     """Completion update from wrapper to backend."""
     type: Literal["complete"] = "complete"
     session_id: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=utc_now)
+
+    model_config = ConfigDict(
+        json_encoders={
+            datetime: lambda v: v.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        }
+    )

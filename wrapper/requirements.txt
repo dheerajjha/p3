@@ -1,5 +1,5 @@
 # Claude Agent SDK - uses existing Claude Code authentication
-claude-sdk>=0.1.6
+# claude-sdk>=0.1.6  # Not available in pip yet
 
 # WebSocket and async support
 websockets>=12.0

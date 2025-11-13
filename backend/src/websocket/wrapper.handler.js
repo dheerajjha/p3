@@ -7,7 +7,7 @@ import { wrapperUpdateSchema } from '../schemas.js';
 import { config } from '../config.js';
 
 export async function handleWrapperConnection(connection, request, fastify) {
-  const { socket } = connection;
+  const socket = connection;
 
   // Authenticate wrapper
   try {
@@ -27,21 +27,24 @@ export async function handleWrapperConnection(connection, request, fastify) {
     fastify.log.info(`Wrapper connected: ${wrapperId}`);
 
     // Store connection
-    if (!fastify.wrapperConnections) {
-      fastify.wrapperConnections = new Map();
-    }
     fastify.wrapperConnections.set(wrapperId, socket);
+    fastify.log.info(`Total wrapper connections: ${fastify.wrapperConnections.size}`);
 
     // Handle messages from wrapper
     socket.on('message', async (message) => {
       try {
-        const data = JSON.parse(message.toString());
+        const rawData = message.toString();
+        fastify.log.info('Received wrapper message:', rawData);
+        const data = JSON.parse(rawData);
         const validated = wrapperUpdateSchema.parse(data);
 
         await handleWrapperUpdate(fastify, validated);
 
       } catch (error) {
-        fastify.log.error('Error handling wrapper message:', error);
+        fastify.log.error('Error handling wrapper message:', error.message);
+        if (error.issues) {
+          fastify.log.error('Validation errors:', JSON.stringify(error.issues));
+        }
       }
     });
 
@@ -242,11 +245,19 @@ function formatErrorMessage(error) {
  * Broadcast to all wrappers
  */
 export function wrapperBroadcast(fastify, message) {
-  if (!fastify.wrapperConnections) return;
+  if (!fastify.wrapperConnections) {
+    fastify.log.warn('No wrapper connections available');
+    return;
+  }
+
+  fastify.log.info(`Broadcasting to ${fastify.wrapperConnections.size} wrapper(s)`);
 
   for (const [wrapperId, socket] of fastify.wrapperConnections.entries()) {
     if (socket.readyState === 1) {
+      fastify.log.info(`Sending to wrapper ${wrapperId}:`, message);
       socket.send(message);
+    } else {
+      fastify.log.warn(`Wrapper ${wrapperId} not ready, state: ${socket.readyState}`);
     }
   }
 }

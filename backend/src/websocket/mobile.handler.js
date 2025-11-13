@@ -4,7 +4,7 @@
 import { SessionService } from '../services/session.service.js';
 
 export async function handleMobileConnection(connection, request, fastify) {
-  const { socket } = connection;
+  const socket = connection;
 
   // Authenticate
   try {

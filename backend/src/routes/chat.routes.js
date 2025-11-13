@@ -44,6 +44,7 @@ export async function chatRoutes(fastify) {
       };
 
       // Broadcast to wrapper
+      fastify.log.info('Broadcasting command to wrapper:', wrapperCommand);
       fastify.wrapperBroadcast(JSON.stringify(wrapperCommand));
 
       return {

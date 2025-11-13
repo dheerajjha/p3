@@ -1,0 +1,14 @@
+{
+  "name": "claude-code-wrapper",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Node.js wrapper for Claude Code CLI",
+  "main": "wrapper.js",
+  "scripts": {
+    "start": "node wrapper.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2",
+    "dotenv": "^16.3.1"
+  }
+}

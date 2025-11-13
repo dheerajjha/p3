@@ -46,6 +46,10 @@ await fastify.register(authPlugin);
 // Decorate with Prisma
 fastify.decorate('prisma', prisma);
 
+// Initialize wrapper and mobile connections
+fastify.decorate('wrapperConnections', new Map());
+fastify.decorate('mobileConnections', new Map());
+
 // Decorate with wrapper broadcast
 fastify.decorate('wrapperBroadcast', (message) => wrapperBroadcast(fastify, message));
 
