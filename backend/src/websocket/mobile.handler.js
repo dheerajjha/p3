@@ -8,7 +8,12 @@ export async function handleMobileConnection(connection, request, fastify) {
 
   // Authenticate
   try {
-    const token = request.headers.authorization?.replace('Bearer ', '');
+    // Try to get token from Authorization header or query parameter
+    let token = request.headers.authorization?.replace('Bearer ', '');
+    if (!token && request.url) {
+      const url = new URL(request.url, 'http://localhost');
+      token = url.searchParams.get('token');
+    }
     if (!token) {
       socket.close(4001, 'Unauthorized');
       return;

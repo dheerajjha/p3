@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Message {
   final String id;
   final String sessionId;
@@ -20,12 +22,26 @@ class Message {
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
+    // Parse metadata - it might be a string (from SQLite) or already a Map
+    Map<String, dynamic>? metadata;
+    if (json['metadata'] != null) {
+      if (json['metadata'] is String) {
+        try {
+          metadata = jsonDecode(json['metadata']) as Map<String, dynamic>;
+        } catch (e) {
+          metadata = null;
+        }
+      } else {
+        metadata = json['metadata'] as Map<String, dynamic>?;
+      }
+    }
+
     return Message(
       id: json['id'] as String,
       sessionId: json['sessionId'] as String,
       role: json['role'] as String,
       content: json['content'] as String,
-      metadata: json['metadata'] as Map<String, dynamic>?,
+      metadata: metadata,
       createdAt: DateTime.parse(json['createdAt'] as String),
       type: MessageType.values.firstWhere(
         (e) => e.name == json['type'],

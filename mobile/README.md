@@ -69,11 +69,16 @@ Update the backend URL in `lib/services/api_service.dart` and `lib/services/webs
 
 ```dart
 // api_service.dart
-static const String baseUrl = 'http://your-backend-url:3000/api';
+static const String baseUrl = 'http://your-backend-url:3300/api';
 
 // websocket_service.dart
-static const String wsUrl = 'ws://your-backend-url:3000/mobile';
+static const String wsUrl = 'ws://your-backend-url:3300/mobile';
 ```
+
+**Current Configuration:**
+- Local development uses `localhost:3300`
+- Backend API: `http://localhost:3300/api`
+- WebSocket: `ws://localhost:3300/mobile`
 
 For production, use environment variables or build-time configuration.
 

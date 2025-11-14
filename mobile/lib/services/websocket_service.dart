@@ -5,7 +5,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class WebSocketService {
-  static const String wsUrl = 'ws://localhost:3000/mobile';
+  static const String wsUrl = 'ws://localhost:3300/mobile';
   static const _storage = FlutterSecureStorage();
 
   WebSocketChannel? _channel;
@@ -29,15 +29,9 @@ class WebSocketService {
     _messageController = StreamController<Map<String, dynamic>>.broadcast();
 
     try {
-      _channel = WebSocketChannel.connect(
-        Uri.parse(wsUrl),
-      );
-
-      // Send auth token immediately after connection
-      _channel!.sink.add(jsonEncode({
-        'type': 'auth',
-        'token': _token,
-      }));
+      // Pass token as query parameter for WebSocket connection
+      final uri = Uri.parse('$wsUrl?token=$_token');
+      _channel = WebSocketChannel.connect(uri);
 
       _isConnected = true;
 

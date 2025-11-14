@@ -6,7 +6,7 @@ import '../models/session.dart';
 import '../models/message.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'http://localhost:3300/api';
   static const _storage = FlutterSecureStorage();
 
   final Dio _dio;

@@ -34,17 +34,22 @@ export async function handleWrapperConnection(connection, request, fastify) {
     socket.on('message', async (message) => {
       try {
         const rawData = message.toString();
-        fastify.log.info('Received wrapper message:', rawData);
+        fastify.log.info(`Received wrapper message: ${rawData.substring(0, 500)}`);
         const data = JSON.parse(rawData);
         const validated = wrapperUpdateSchema.parse(data);
 
         await handleWrapperUpdate(fastify, validated);
 
       } catch (error) {
-        fastify.log.error('Error handling wrapper message:', error.message);
+        fastify.log.error(`Error handling wrapper message: ${error.message || String(error)}`);
+        fastify.log.error(`Error stack: ${error.stack || 'No stack'}`);
         if (error.issues) {
-          fastify.log.error('Validation errors:', JSON.stringify(error.issues));
+          fastify.log.error(`Validation errors: ${JSON.stringify(error.issues, null, 2)}`);
         }
+        if (error.errors) {
+          fastify.log.error(`Error details: ${JSON.stringify(error.errors, null, 2)}`);
+        }
+        fastify.log.error(`Raw message that caused error: ${rawData}`);
       }
     });
 
@@ -104,7 +109,7 @@ async function handleMessageUpdate(fastify, update) {
       session_id,
       'assistant',
       data.content,
-      data
+      JSON.stringify(data)
     );
   }
 
@@ -143,7 +148,7 @@ async function handleErrorUpdate(fastify, update) {
     session_id,
     'system',
     `Error: ${error}`,
-    { error, details }
+    JSON.stringify({ error, details })
   );
 
   // Forward friendly error to mobile

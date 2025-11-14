@@ -104,7 +104,10 @@ class WrapperClient {
   }
 
   sendMessage(sessionId, data) {
-    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+      this.log('warn', 'Cannot send message: WebSocket not open');
+      return;
+    }
 
     const message = {
       type: 'message',
@@ -113,8 +116,9 @@ class WrapperClient {
       timestamp: new Date().toISOString(),
     };
 
+    this.log('info', `Sending message for session ${sessionId}`, JSON.stringify(message).substring(0, 200));
     this.ws.send(JSON.stringify(message));
-    this.log('debug', 'Sent message update');
+    this.log('info', 'Message sent successfully');
   }
 
   sendError(sessionId, error, details = {}) {
@@ -204,6 +208,9 @@ class WrapperClient {
       claudeProcess.on('close', (code) => {
         this.activeProcesses.delete(sessionId);
         this.log('info', `Claude CLI exited with code ${code}`);
+        this.log('info', `stdout buffer length: ${stdoutBuffer.length}`);
+        this.log('info', `stderr buffer length: ${stderrBuffer.length}`);
+        this.log('info', `stdout content: ${stdoutBuffer.substring(0, 200)}`);
 
         if (code === 0 && stdoutBuffer.trim()) {
           // Send response
