@@ -5,7 +5,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class WebSocketService {
-  static const String wsUrl = 'ws://localhost:3300/mobile';
+  static const String wsUrl = 'ws://localhost:7350/mobile';
   static const _storage = FlutterSecureStorage();
 
   WebSocketChannel? _channel;

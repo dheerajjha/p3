@@ -32,7 +32,7 @@ dependencies:
   lottie: ^3.0.0
 
   # Code highlighting
-  flutter_highlighting: ^0.1.1
+  flutter_highlighting: ^0.9.0+11.8.0
   highlight: ^0.7.0
 
   # Utilities

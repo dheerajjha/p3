@@ -32,8 +32,9 @@ export async function handleWrapperConnection(connection, request, fastify) {
 
     // Handle messages from wrapper
     socket.on('message', async (message) => {
+      let rawData;
       try {
-        const rawData = message.toString();
+        rawData = message.toString();
         fastify.log.info(`Received wrapper message: ${rawData.substring(0, 500)}`);
         const data = JSON.parse(rawData);
         const validated = wrapperUpdateSchema.parse(data);
@@ -49,7 +50,9 @@ export async function handleWrapperConnection(connection, request, fastify) {
         if (error.errors) {
           fastify.log.error(`Error details: ${JSON.stringify(error.errors, null, 2)}`);
         }
-        fastify.log.error(`Raw message that caused error: ${rawData}`);
+        if (rawData) {
+          fastify.log.error(`Raw message that caused error: ${rawData}`);
+        }
       }
     });
 

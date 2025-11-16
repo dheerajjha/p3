@@ -182,7 +182,8 @@ class WrapperClient {
 
     return new Promise((resolve, reject) => {
       // Execute claude CLI in non-interactive mode with prompt as argument
-      const claudeProcess = spawn('claude', ['--print', prompt], {
+      // Use -c flag to maintain context across conversations
+      const claudeProcess = spawn('claude', ['-c', '--print', prompt], {
         cwd: settings.workspaceDir,
         env: process.env,
         stdio: ['ignore', 'pipe', 'pipe'], // ignore stdin, pipe stdout and stderr
